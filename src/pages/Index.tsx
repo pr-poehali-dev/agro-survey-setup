@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,24 +9,56 @@ import Icon from '@/components/ui/icon';
 import { Document, Paragraph, TextRun, AlignmentType, Packer, HeadingLevel } from 'docx';
 import { saveAs } from 'file-saver';
 
+const STORAGE_KEY = 'agro-form-data';
+
 const Index = () => {
-  const [formData, setFormData] = useState({
-    organizationName: '',
-    inn: '',
-    address: '',
-    contactPerson: '',
-    phone: '',
-    email: '',
-    farmType: '',
-    landArea: '',
-    mainCrops: '',
-    livestock: '',
-    equipment: [] as string[],
-    problems: '',
-    investmentNeeds: '',
-    subsidies: '',
-    experience: '',
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return {
+          organizationName: '',
+          inn: '',
+          address: '',
+          contactPerson: '',
+          phone: '',
+          email: '',
+          farmType: '',
+          landArea: '',
+          mainCrops: '',
+          livestock: '',
+          equipment: [] as string[],
+          problems: '',
+          investmentNeeds: '',
+          subsidies: '',
+          experience: '',
+        };
+      }
+    }
+    return {
+      organizationName: '',
+      inn: '',
+      address: '',
+      contactPerson: '',
+      phone: '',
+      email: '',
+      farmType: '',
+      landArea: '',
+      mainCrops: '',
+      livestock: '',
+      equipment: [] as string[],
+      problems: '',
+      investmentNeeds: '',
+      subsidies: '',
+      experience: '',
+    };
   });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
 
   const equipmentOptions = [
     'Тракторы',
